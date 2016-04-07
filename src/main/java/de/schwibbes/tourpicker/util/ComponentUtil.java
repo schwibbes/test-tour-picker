@@ -4,12 +4,11 @@ import java.util.List;
 
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.ListSelect;
 
 import de.schwibbes.tourpicker.data.Part;
 import de.schwibbes.tourpicker.model.SelectionContainer;
-
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.ListSelect;
 
 public final class ComponentUtil {
 

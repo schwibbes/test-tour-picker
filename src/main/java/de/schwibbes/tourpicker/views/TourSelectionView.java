@@ -15,9 +15,9 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ClassResource;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
@@ -41,9 +41,18 @@ public class TourSelectionView extends VerticalLayout implements View {
 	private static final long serialVersionUID = 5724079810773094089L;
 	private ComponentUtil util = ComponentUtil.getInstance();
 	private BeanItem<User> user;
+	private HorizontalLayout lists;
+	private TourDAO tourDao;
+	private PartDAO partDao;
+	private UserDAO userDao;
+	private Panel successPanel;
 
 	@Autowired
 	public TourSelectionView(TourDAO tourDao, PartDAO partDao, UserDAO userDao) {
+		this.tourDao = tourDao;
+		this.partDao = partDao;
+		this.userDao = userDao;
+
 		setMargin(true);
 		setSpacing(true);
 
@@ -56,29 +65,13 @@ public class TourSelectionView extends VerticalLayout implements View {
 		List<Part> dataParts = parts.stream().filter(p -> p.getPartType() == PartType.DATA)
 				.collect(Collectors.toList());
 
-		HorizontalLayout lists = new HorizontalLayout();
+		lists = new HorizontalLayout();
 
 		util.createList(lists, "tour", tourParts);
 		util.createList(lists, "feature", featureParts);
 		util.createList(lists, "data", dataParts);
 		addComponent(lists);
 		setComponentAlignment(lists, Alignment.MIDDLE_CENTER);
-
-		Button pick = new Button("pick");
-		pick.setWidth("300px");
-		addComponent(pick);
-		setComponentAlignment(pick, Alignment.MIDDLE_CENTER);
-		pick.addClickListener(e -> {
-
-			Long selectedTour = selectRandom((ListSelect) lists.getComponent(0));
-			Long selectedFeature = selectRandom((ListSelect) lists.getComponent(1));
-			Long selectedData = selectRandom((ListSelect) lists.getComponent(2));
-
-			saveTour(tourDao, selectedTour, selectedFeature, selectedData);
-			showSuccess();
-			pick.setEnabled(false);
-		});
-
 	}
 
 	private void saveTour(TourDAO tourDao, Long selectedTour, Long selectedFeature, Long selectedData) {
@@ -98,27 +91,36 @@ public class TourSelectionView extends VerticalLayout implements View {
 	}
 
 	private void showSuccess() {
+
+		if (successPanel != null)
+			removeComponent(successPanel);
+
 		LocalDateTime now = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-		Panel panel = new Panel("Und los!");
-		panel.setWidth("400px");
-		addComponent(panel);
-		setComponentAlignment(panel, Alignment.TOP_CENTER);
+		successPanel = new Panel("Und los!");
+		successPanel.setWidth("400px");
+		addComponent(successPanel);
+		setComponentAlignment(successPanel, Alignment.MIDDLE_CENTER);
+		setExpandRatio(successPanel, 10);
 
 		HorizontalLayout h = new HorizontalLayout();
 		h.setSpacing(true);
 		h.setMargin(true);
-		panel.setContent(h);
+		successPanel.setContent(h);
 
 		h.addComponent(loadImage("ok.png"));
 
 		VerticalLayout v = new VerticalLayout();
 		h.addComponent(v);
 
-		v.addComponent(new Label("Your tour starts @" + now.format(formatter)));
-		v.addComponent(new Label("you have time until: " + now.plusHours(2).format(formatter)));
-		v.addComponent(new Label("Have Fun!"));
+		v.addComponent(new Label( //
+				String.format("Deine Tour beginnt um: <b>%s</b>", now.format(formatter)), //
+				ContentMode.HTML));
+		v.addComponent(new Label( //
+				String.format("Du hast Zeit bis: <b>%s</b>", now.plusHours(2).format(formatter)), //
+				ContentMode.HTML));
+		v.addComponent(new Label("Viel Spaß!"));
 
 	}
 
@@ -134,14 +136,7 @@ public class TourSelectionView extends VerticalLayout implements View {
 		if (user == null) {
 			UI.getCurrent().getNavigator().navigateTo("");
 		} else {
-			addComponent(new Label("Starting Tour as: " + user.getItemProperty("name")), 0);
-			Button button = new Button("restart");
-			button.setWidth("300px");
-			addComponent(button);
-			setComponentAlignment(button, Alignment.TOP_CENTER);
-			button.addClickListener(e -> {
-				UI.getCurrent().getNavigator().navigateTo("");
-			});
+			draw();
 		}
 	}
 
@@ -156,5 +151,15 @@ public class TourSelectionView extends VerticalLayout implements View {
 		Long selectedItemId = (Long) itemIds.get(chosenValue);
 		list.select(selectedItemId);
 		return selectedItemId;
+	}
+
+	public void draw() {
+		Long selectedTour = selectRandom((ListSelect) lists.getComponent(0));
+		Long selectedFeature = selectRandom((ListSelect) lists.getComponent(1));
+		Long selectedData = selectRandom((ListSelect) lists.getComponent(2));
+
+		saveTour(tourDao, selectedTour, selectedFeature, selectedData);
+		showSuccess();
+
 	}
 }

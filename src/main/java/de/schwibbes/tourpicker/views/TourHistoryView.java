@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.VerticalLayout;
 
@@ -20,11 +22,17 @@ public class TourHistoryView extends VerticalLayout implements View {
 	@Autowired
 	public TourHistoryView(TourDAO tourDao) {
 		Grid tours = new Grid();
+		tours.setWidth("80%");
+		tours.setHeight("100%");
 		BeanItemContainer<Tour> container = new BeanItemContainer<>(Tour.class);
 		container.addAll(tourDao.findAll());
 		System.out.println("found tours: " + container.size());
 		tours.setContainerDataSource(container);
+		tours.removeColumn("id");
+		tours.setColumnOrder("timestamp", "tester", "tour", "feature", "data");
+		tours.sort("timestamp", SortDirection.DESCENDING);
 		addComponent(tours);
+		setComponentAlignment(tours, Alignment.MIDDLE_CENTER);
 	}
 
 	@Override

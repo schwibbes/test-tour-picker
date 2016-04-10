@@ -18,7 +18,7 @@ import de.schwibbes.tourpicker.data.User;
 import de.schwibbes.tourpicker.data.UserDAO;
 import de.schwibbes.tourpicker.util.ComponentUtil;
 
-@SpringView(name = "")
+@SpringView(name = ViewNames.START)
 public class UserSelectionView extends HorizontalLayout implements View {
 
 	private static final long serialVersionUID = 1L;
@@ -59,7 +59,7 @@ public class UserSelectionView extends HorizontalLayout implements View {
 
 		Item item = list.getItem(userChosen);
 		UI.getCurrent().getSession().setAttribute("user", item);
-		UI.getCurrent().getNavigator().navigateTo("tours");
+		UI.getCurrent().getNavigator().navigateTo(ViewNames.SELECTION);
 	}
 
 	@Override

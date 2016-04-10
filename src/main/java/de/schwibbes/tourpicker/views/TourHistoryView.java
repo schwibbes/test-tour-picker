@@ -14,7 +14,7 @@ import com.vaadin.ui.VerticalLayout;
 import de.schwibbes.tourpicker.data.Tour;
 import de.schwibbes.tourpicker.data.TourDAO;
 
-@SpringView(name = "history")
+@SpringView(name = ViewNames.HISTORY)
 public class TourHistoryView extends VerticalLayout implements View {
 
 	private static final long serialVersionUID = 1L;

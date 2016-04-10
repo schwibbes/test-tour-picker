@@ -35,7 +35,7 @@ import de.schwibbes.tourpicker.data.User;
 import de.schwibbes.tourpicker.data.UserDAO;
 import de.schwibbes.tourpicker.util.ComponentUtil;
 
-@SpringView(name = "tours")
+@SpringView(name = ViewNames.SELECTION)
 public class TourSelectionView extends VerticalLayout implements View {
 
 	private static final long serialVersionUID = 5724079810773094089L;
@@ -136,7 +136,7 @@ public class TourSelectionView extends VerticalLayout implements View {
 	public void enter(ViewChangeEvent event) {
 		user = (BeanItem<User>) UI.getCurrent().getSession().getAttribute("user");
 		if (user == null) {
-			UI.getCurrent().getNavigator().navigateTo("");
+			UI.getCurrent().getNavigator().navigateTo(ViewNames.START);
 		} else {
 			draw();
 		}

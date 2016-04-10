@@ -23,6 +23,7 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.schwibbes.tourpicker.data.User;
 import de.schwibbes.tourpicker.views.TourSelectionView;
+import de.schwibbes.tourpicker.views.ViewNames;
 
 @SpringUI
 @Theme("mytheme")
@@ -63,11 +64,10 @@ public class TourpickerUI extends UI {
 				@SuppressWarnings("unchecked")
 				BeanItem<User> user = (BeanItem<User>) UI.getCurrent().getSession().getAttribute("user");
 				switch (event.getViewName()) {
-				case "":
+				case ViewNames.START:
 					return true;
-				case "tours":
-					return user != null;
-				case "history":
+				case ViewNames.SELECTION:
+				case ViewNames.HISTORY:
 					return user != null;
 				default:
 					throw new IllegalStateException("view not found:" + event.getViewName());
@@ -77,13 +77,13 @@ public class TourpickerUI extends UI {
 			@Override
 			public void afterViewChange(ViewChangeEvent event) {
 				switch (event.getViewName()) {
-				case "":
+				case ViewNames.START:
 					restart.setEnabled(false);
 					redraw.setEnabled(false);
 					history.setEnabled(true);
 					headerMessageProperty.setValue("Hallo, wer bist Du?");
 					break;
-				case "tours":
+				case ViewNames.SELECTION:
 					restart.setEnabled(true);
 					redraw.setEnabled(true);
 					history.setEnabled(true);
@@ -92,7 +92,7 @@ public class TourpickerUI extends UI {
 					headerMessageProperty.setValue(
 							String.format("Hallo <b>%s</b>, das ist deine Tour!", user.getItemProperty("name")));
 					break;
-				case "history":
+				case ViewNames.HISTORY:
 					restart.setEnabled(true);
 					redraw.setEnabled(false);
 					history.setEnabled(false);
@@ -133,7 +133,7 @@ public class TourpickerUI extends UI {
 		footer.addComponent(restart);
 		footer.setComponentAlignment(restart, Alignment.MIDDLE_CENTER);
 		restart.addClickListener(e -> {
-			UI.getCurrent().getNavigator().navigateTo("");
+			UI.getCurrent().getNavigator().navigateTo(ViewNames.START);
 		});
 
 		redraw = new Button("Ziehung wiederholen");
@@ -150,7 +150,7 @@ public class TourpickerUI extends UI {
 		footer.addComponent(history);
 		footer.setComponentAlignment(history, Alignment.MIDDLE_CENTER);
 		history.addClickListener(e -> {
-			UI.getCurrent().getNavigator().navigateTo("history");
+			UI.getCurrent().getNavigator().navigateTo(ViewNames.HISTORY);
 		});
 	}
 

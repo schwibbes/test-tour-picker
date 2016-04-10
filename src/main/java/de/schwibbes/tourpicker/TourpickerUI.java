@@ -140,7 +140,7 @@ public class TourpickerUI extends UI {
 		redraw.addClickListener(e -> {
 			View currentView = UI.getCurrent().getNavigator().getCurrentView();
 			if (currentView instanceof TourSelectionView) {
-				((TourSelectionView) currentView).draw();
+				((TourSelectionView) currentView).reDraw();
 			}
 		});
 

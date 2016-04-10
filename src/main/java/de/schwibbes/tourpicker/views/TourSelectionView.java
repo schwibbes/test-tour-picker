@@ -46,6 +46,7 @@ public class TourSelectionView extends VerticalLayout implements View {
 	private PartDAO partDao;
 	private UserDAO userDao;
 	private Panel successPanel;
+	private Tour savedTour;
 
 	@Autowired
 	public TourSelectionView(TourDAO tourDao, PartDAO partDao, UserDAO userDao) {
@@ -87,7 +88,7 @@ public class TourSelectionView extends VerticalLayout implements View {
 
 		Timestamp now = new Timestamp(Calendar.getInstance().getTime().getTime());
 
-		tourDao.save(new Tour(user.getBean(), now, dataPart, tourPart, featurePart));
+		savedTour = tourDao.save(new Tour(user.getBean(), now, dataPart, tourPart, featurePart));
 	}
 
 	private void showSuccess() {
@@ -130,6 +131,7 @@ public class TourSelectionView extends VerticalLayout implements View {
 		return image;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void enter(ViewChangeEvent event) {
 		user = (BeanItem<User>) UI.getCurrent().getSession().getAttribute("user");
@@ -153,13 +155,21 @@ public class TourSelectionView extends VerticalLayout implements View {
 		return selectedItemId;
 	}
 
-	public void draw() {
+	private void draw() {
 		Long selectedTour = selectRandom((ListSelect) lists.getComponent(0));
 		Long selectedFeature = selectRandom((ListSelect) lists.getComponent(1));
 		Long selectedData = selectRandom((ListSelect) lists.getComponent(2));
 
 		saveTour(tourDao, selectedTour, selectedFeature, selectedData);
 		showSuccess();
+
+	}
+
+	public void reDraw() {
+		if (savedTour != null) {
+			tourDao.delete(savedTour.getId());
+		}
+		draw();
 
 	}
 }

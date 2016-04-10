@@ -67,7 +67,7 @@ public class TourSelectionView extends VerticalLayout implements View {
 				.collect(Collectors.toList());
 
 		lists = new HorizontalLayout();
-
+		lists.setSpacing(true);
 		util.createList(lists, "tour", tourParts);
 		util.createList(lists, "feature", featureParts);
 		util.createList(lists, "data", dataParts);

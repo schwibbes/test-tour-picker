@@ -7,7 +7,8 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.UI;
 
@@ -18,7 +19,7 @@ import de.schwibbes.tourpicker.data.UserDAO;
 import de.schwibbes.tourpicker.util.ComponentUtil;
 
 @SpringView(name = "")
-public class UserSelectionView extends AbsoluteLayout implements View {
+public class UserSelectionView extends HorizontalLayout implements View {
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,7 +42,8 @@ public class UserSelectionView extends AbsoluteLayout implements View {
 	private ListSelect createUserList(UserDAO userDao) {
 		ListSelect list = util.newList("");
 
-		addComponent(list, "top: 50px; left: 200px");
+		addComponent(list);
+		setComponentAlignment(list, Alignment.TOP_CENTER);
 		list.setContainerDataSource(createUserContainer(userDao));
 		return list;
 	}

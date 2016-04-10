@@ -21,18 +21,31 @@ public class TourHistoryView extends VerticalLayout implements View {
 
 	@Autowired
 	public TourHistoryView(TourDAO tourDao) {
+
+		BeanItemContainer<Tour> container = loadContainer(tourDao);
+		Grid tours = createGrid(container);
+
+		setMargin(true);
+		addComponent(tours);
+		setComponentAlignment(tours, Alignment.MIDDLE_CENTER);
+	}
+
+	private Grid createGrid(BeanItemContainer<Tour> container) {
 		Grid tours = new Grid();
 		tours.setWidth("80%");
 		tours.setHeight("100%");
-		BeanItemContainer<Tour> container = new BeanItemContainer<>(Tour.class);
-		container.addAll(tourDao.findAll());
-		System.out.println("found tours: " + container.size());
 		tours.setContainerDataSource(container);
 		tours.removeColumn("id");
 		tours.setColumnOrder("timestamp", "tester", "tour", "feature", "data");
 		tours.sort("timestamp", SortDirection.DESCENDING);
-		addComponent(tours);
-		setComponentAlignment(tours, Alignment.MIDDLE_CENTER);
+		return tours;
+	}
+
+	private BeanItemContainer<Tour> loadContainer(TourDAO tourDao) {
+		BeanItemContainer<Tour> container = new BeanItemContainer<>(Tour.class);
+		container.addAll(tourDao.findAll());
+		System.out.println("found tours: " + container.size());
+		return container;
 	}
 
 	@Override

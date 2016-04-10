@@ -2,6 +2,7 @@ package de.schwibbes.tourpicker;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.navigator.Navigator;
@@ -24,6 +25,7 @@ import de.schwibbes.tourpicker.data.User;
 import de.schwibbes.tourpicker.views.TourSelectionView;
 
 @SpringUI
+@Theme("mytheme")
 public class TourpickerUI extends UI {
 	private static final long serialVersionUID = 1416197441441685916L;
 

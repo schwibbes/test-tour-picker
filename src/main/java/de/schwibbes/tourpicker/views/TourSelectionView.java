@@ -17,6 +17,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ClassResource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
@@ -36,6 +37,7 @@ import de.schwibbes.tourpicker.data.UserDAO;
 import de.schwibbes.tourpicker.util.ComponentUtil;
 
 @SpringView(name = ViewNames.SELECTION)
+@UIScope
 public class TourSelectionView extends VerticalLayout implements View {
 
 	private static final long serialVersionUID = 5724079810773094089L;

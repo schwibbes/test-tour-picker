@@ -26,7 +26,7 @@ import de.schwibbes.tourpicker.views.TourSelectionView;
 import de.schwibbes.tourpicker.views.ViewNames;
 
 @SpringUI
-@Theme("mytheme")
+@Theme("valo")
 public class TourpickerUI extends UI {
 	private static final long serialVersionUID = 1416197441441685916L;
 
@@ -65,9 +65,9 @@ public class TourpickerUI extends UI {
 				BeanItem<User> user = (BeanItem<User>) UI.getCurrent().getSession().getAttribute("user");
 				switch (event.getViewName()) {
 				case ViewNames.START:
+				case ViewNames.HISTORY:
 					return true;
 				case ViewNames.SELECTION:
-				case ViewNames.HISTORY:
 					return user != null;
 				default:
 					throw new IllegalStateException("view not found:" + event.getViewName());

@@ -6,8 +6,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "PART")
 public class Part {
 
 	@Id
@@ -18,6 +20,17 @@ public class Part {
 
 	@Enumerated(value = EnumType.STRING)
 	private PartType partType;
+
+	private boolean deleted;
+
+	public Part(String name, PartType partType) {
+		super();
+		this.name = name;
+		this.partType = partType;
+	}
+
+	public Part() {
+	}
 
 	public String getName() {
 		return name;
@@ -35,12 +48,20 @@ public class Part {
 		this.id = id;
 	}
 
-	public Part(String name) {
-		super();
-		this.name = name;
+	public PartType getPartType() {
+		return partType;
 	}
 
-	public Part() {
+	public void setPartType(PartType partType) {
+		this.partType = partType;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	@Override
@@ -48,12 +69,23 @@ public class Part {
 		return name;
 	}
 
-	public PartType getPartType() {
-		return partType;
-	}
-
-	public void setPartType(PartType partType) {
-		this.partType = partType;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Part other = (Part) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (partType != other.partType)
+			return false;
+		return true;
 	}
 
 }

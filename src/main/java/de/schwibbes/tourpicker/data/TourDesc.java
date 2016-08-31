@@ -7,16 +7,24 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "USER")
-public class User {
+@Table(name = "TOURDESC")
+public class TourDesc {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private boolean deleted;
-
 	private String name;
+
+	private String description;
+
+	public TourDesc() {
+	}
+
+	public TourDesc(String name, String description) {
+		this.name = name;
+		this.description = description;
+	}
 
 	public String getName() {
 		return name;
@@ -34,26 +42,17 @@ public class User {
 		this.id = id;
 	}
 
-	public User(String name) {
-		super();
-		this.name = name;
-		this.deleted = false;
+	public String getDescription() {
+		return description;
 	}
 
-	public User() {
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Override
 	public String toString() {
-		return name;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public boolean isDeleted() {
-		return this.deleted;
+		return name + ":" + description;
 	}
 
 }

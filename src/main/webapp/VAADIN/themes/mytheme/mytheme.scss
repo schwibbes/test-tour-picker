@@ -1,7 +1,7 @@
 @import "../valo/valo.scss";
 
 @mixin mytheme {
-  $v-layout-spacing-vertical: 70px;
+  $v-layout-spacing-vertical: 10px;
   
   @include valo;
  

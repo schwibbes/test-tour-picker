@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository("part")
-public interface PartDAO extends CrudRepository<Part, Long> {
+@Repository("workspace")
+public interface WorkspaceDAO extends CrudRepository<Workspace, Long> {
 
 	@Override
-	List<Part> findAll();
+	List<Workspace> findAll();
 }

@@ -1,22 +1,33 @@
 package de.schwibbes.tourpicker.data;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "USER")
-public class User {
+@Table(name = "WORKSPACE")
+public class Workspace {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private boolean deleted;
-
 	private String name;
+
+	@Enumerated(value = EnumType.STRING)
+	private WorkingStatus workingStatus;
+
+	public Workspace() {
+	}
+
+	public Workspace(String name, WorkingStatus workingStatus) {
+		this.name = name;
+		this.workingStatus = workingStatus;
+	}
 
 	public String getName() {
 		return name;
@@ -34,26 +45,17 @@ public class User {
 		this.id = id;
 	}
 
-	public User(String name) {
-		super();
-		this.name = name;
-		this.deleted = false;
+	public WorkingStatus getWorkingStatus() {
+		return workingStatus;
 	}
 
-	public User() {
+	public void setWorkingStatus(WorkingStatus workingStatus) {
+		this.workingStatus = workingStatus;
 	}
 
 	@Override
 	public String toString() {
-		return name;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public boolean isDeleted() {
-		return this.deleted;
+		return name + ":" + workingStatus;
 	}
 
 }

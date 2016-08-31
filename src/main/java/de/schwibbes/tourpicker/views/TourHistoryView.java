@@ -7,54 +7,72 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.VerticalLayout;
 
 import de.schwibbes.tourpicker.data.Tour;
 import de.schwibbes.tourpicker.data.TourDAO;
+import de.schwibbes.tourpicker.util.ComponentUtil;
 
 @SpringView(name = ViewNames.HISTORY)
-@UIScope
 public class TourHistoryView extends VerticalLayout implements View {
 
 	private static final long serialVersionUID = 1L;
 	private Grid tours;
+	private Button delete;
 	private TourDAO tourDao;
 
 	@Autowired
 	public TourHistoryView(TourDAO tourDao) {
-
 		this.tourDao = tourDao;
-		setMargin(true);
+		BeanItemContainer<Tour> container = loadContainer();
+		Grid tours = createGrid(container);
 
-		tours = createGrid();
+		setMargin(true);
+		setSpacing(true);
 		addComponent(tours);
 		setComponentAlignment(tours, Alignment.MIDDLE_CENTER);
 	}
 
-	private Grid createGrid() {
-		Grid tours = new Grid();
+	private Grid createGrid(BeanItemContainer<Tour> container) {
+		tours = new Grid();
 		tours.setWidth("80%");
 		tours.setHeight("100%");
+		tours.setContainerDataSource(container);
+		tours.removeColumn("id");
+		tours.setColumnOrder("timestamp", "tester", "tour", "feature", "data");
+		tours.sort("timestamp", SortDirection.DESCENDING);
+		tours.addSelectionListener(e -> selectionChanged());
 		return tours;
 	}
 
-	private BeanItemContainer<Tour> loadContainer(TourDAO tourDao) {
+	private void selectionChanged() {
+		if (tours.getSelectedRow() != null) {
+			if (delete != null) {
+				removeComponent(delete);
+			}
+			delete = ComponentUtil.createSmallButton(this, "Tour löschen");
+			delete.addClickListener(e -> deleteTour());
+		}
+	}
+
+	private void deleteTour() {
+		tourDao.delete((Tour) tours.getSelectedRow());
+		tours.setContainerDataSource(loadContainer());
+		removeComponent(delete);
+	}
+
+	private BeanItemContainer<Tour> loadContainer() {
 		BeanItemContainer<Tour> container = new BeanItemContainer<>(Tour.class);
 		container.addAll(tourDao.findAll());
-		System.out.println("number of saved tours: " + container.size());
+		System.out.println("found tours: " + container.size());
 		return container;
 	}
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		BeanItemContainer<Tour> container = loadContainer(tourDao);
-		tours.setContainerDataSource(container);
-		tours.removeColumn("id");
-		tours.setColumnOrder("timestamp", "tester", "tour", "feature", "data");
-		tours.sort("timestamp", SortDirection.DESCENDING);
 	}
 
 }
